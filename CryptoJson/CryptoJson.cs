@@ -34,21 +34,36 @@ namespace Security
             }
         }
 
+        //internal inmplementation
         private static U Encrypt<U>(Func<RSA, int, U> encryptionFunc, X509Certificate2 certificate)
-        {
-            
+        {            
             var rsa = certificate.GetRSAPublicKey();
             int chunksize = (rsa.KeySize / 8) - 66; //Asymmetric Encryption using OAEP256: maxLen = KeySize in Bytes - 2*HashSize in Bytes - 2 => KeySize - 2*32 - 2 = Keysize - 66
 
             return encryptionFunc(rsa, chunksize);
         }
+
+        //internal implementation
+        private static T Load(Func<RSA, int, T> decryptFunc, X509Certificate2 certificate)
+        {
+            var rsa = certificate.GetRSAPrivateKey();
+            int chunksize = (rsa.KeySize / 8);
+            return decryptFunc(rsa, chunksize);
+        }
+
+        /// <summary>
+        /// Encrypts the current Object Asymmetrically (RSA OAEP256) into an BASE64 String.<br />
+        /// Use <see cref="Load{T}(string)"/> to load this again.
+        /// </summary>
+        /// <returns>BASE64 encoded RSA encrypted credentials</returns>
         public string ToBase64(X509FindType x509FindType, object findValue)
         {
             var cert = LoadCert(x509FindType, findValue);
             return ToBase64(cert);
         }
+
         /// <summary>
-        /// Encrypts to current Object Asymmetrically (RSA OAEP256) into an BASE64 String.<br />
+        /// Encrypts the current Object Asymmetrically (RSA OAEP256) into an BASE64 String.<br />
         /// Use <see cref="Load{T}(string)"/> to load this again.
         /// </summary>
         /// <returns>BASE64 encoded RSA encrypted credentials</returns>
@@ -69,6 +84,11 @@ namespace Security
             }, certificate);
         }
 
+        /// <summary>
+        /// Encrypts the current Object Asymmetrically (RSA OAEP256) into a bson representation.<br />
+        /// Use <see cref="Load{T}(byte[])"/> to load this again.
+        /// </summary>
+        /// <returns>BSON encoded RSA encrypted credentials</returns>
         public MemoryStream ToBson(X509FindType x509FindType, object findValue)
         {
             var cert = LoadCert(x509FindType, findValue);
@@ -76,11 +96,10 @@ namespace Security
         }
 
         /// <summary>
-        /// Encrypts to current Object Asymmetrically (RSA OAEP256) into an binary bson representation.<br />
+        /// Encrypts the current Object Asymmetrically (RSA OAEP256) into a bson representation.<br />
         /// Use <see cref="Load{T}(byte[])"/> to load this again.
         /// </summary>
-        /// <param name="dic">Key Value Store of all necessary members to restore the credentials from.</param>
-        /// <returns>BASE64 encoded RSA encrypted credentials</returns>
+        /// <returns>BSON encoded RSA encrypted credentials</returns>
         public MemoryStream ToBson(X509Certificate2 certificate) 
         {
             return Encrypt((rsa, chunksize) =>
@@ -111,6 +130,12 @@ namespace Security
             }, certificate);
         }
 
+        /// <summary>
+        /// Loads RSA encrypted BASE64 encoded String of your Object <see cref="ToBase64()"/> 
+        /// </summary>
+        /// <typeparam name="T">Type of your Credentials.</typeparam>
+        /// <param name="encryptedData">BASE64 encoded RSA encrypted json of object</param>
+        /// <returns>decrypted credentials</returns>
         public static T Load(X509FindType x509FindType, object findValue, String encryptedData)
         {
             var cert = LoadCert(x509FindType, findValue);
@@ -120,7 +145,7 @@ namespace Security
         /// <summary>
         /// Loads RSA encrypted BASE64 encoded String of your Object <see cref="ToBase64()"/> 
         /// </summary>
-        /// <typeparam name="T">Type of your Credentials. Make sure to set the Certificate</typeparam>
+        /// <typeparam name="T">Type of your Credentials.</typeparam>
         /// <param name="encryptedData">BASE64 encoded RSA encrypted json of object</param>
         /// <returns>decrypted credentials</returns>
         public static T Load(X509Certificate2 certificate, String encryptedData)
@@ -146,15 +171,23 @@ namespace Security
             }, certificate);
         }
 
+        /// <summary>
+        /// Loads RSA encrypted BASE64 encoded String of your Object <see cref="ToBase64()"/> 
+        /// </summary>
+        /// <typeparam name="T">Type of your Credentials.</typeparam>
+        /// <param name="encryptedData">BSON encoded RSA encrypted json of object</param>
+        /// <returns>decrypted credentials</returns>
         public static T Load(X509FindType x509FindType, object findValue, Stream encryptedData)
         {
             var cert = LoadCert(x509FindType, findValue);
             return Load(cert, encryptedData);
         }
 
-        /// <summary>Loads RSA encrypted BASE64 encoded String of your Object <see cref="M:BASF.ExtensionLibrary.Security.CryptoJson`1.ToBase64(X509Certificate2)"/></summary>
-        /// <param name="certificate">the X509Certificate used to encrypt the data in the Stream </param>
-        /// <param name="encryptedData">BASE64 encoded RSA encrypted json (BSON) of object</param>
+        /// <summary>
+        /// Loads RSA encrypted BASE64 encoded String of your Object <see cref="ToBase64()"/> 
+        /// </summary>
+        /// <typeparam name="T">Type of your Credentials.</typeparam>
+        /// <param name="encryptedData">BSON encoded RSA encrypted json of object</param>
         /// <returns>decrypted credentials</returns>
         public static T Load(X509Certificate2 certificate, Stream encryptedData)
         {
@@ -180,13 +213,6 @@ namespace Security
             }, certificate);
         }
 
-        private static T Load(Func<RSA, int, T> decryptFunc, X509Certificate2 certificate)
-        {
-          
-            var rsa = certificate.GetRSAPrivateKey();
-            int chunksize = (rsa.KeySize / 8);
-            return decryptFunc(rsa, chunksize);
-        }
     }
 }
 #pragma warning restore 618

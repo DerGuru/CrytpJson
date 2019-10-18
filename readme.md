@@ -14,7 +14,7 @@ This will create an instance of FooCredentials using the empty constructor.
 It will further reverse the BASE64 encoding, JSON serialization and decrypts the whole thing into a new instance of FooCredentials and returns it four you to use.
 
 # Creating your own class
-1) Derive your own class from the BASF.ExtensionLibrary.Security.CryptoJson<YourType>. 
+1) Derive your own class from the Security.CryptoJson<YourType>. 
 There is the restriction, that the derived class MUST be self sustainable... which means, that ist must have an empty constructor and still be fully functional.
 2) Keep in mind, that JSON reads and populates ALL public properties. So if you have some Properties, which should not be serialized, mark them with `[JsonIgnore]`.
 3) Keep in mind, that JSON **does not** read and populates static properties. So if you have some static properties, which should be serialized, mark them with `[JsonProperty]`.
