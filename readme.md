@@ -1,4 +1,4 @@
-﻿When connecting to other systems, there is usually the need for some credentials and with them the question, how to store them safely.
+When connecting to other systems, there is usually the need for some credentials and with them the question, how to store them safely.
 Ask no longer, because the solution is here.
 
 #How does it work?
