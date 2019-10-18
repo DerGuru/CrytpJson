@@ -1,4 +1,4 @@
-﻿using BASF.ExtensionLibrary.Strings;
+﻿using Strings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using System;
@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 #pragma warning disable 618
-namespace BASF.ExtensionLibrary.Security
+namespace Security
 {
     /// <summary>
     /// The CrytoCredentials are the basis for storing Credentials securely in Source Code/Web.config

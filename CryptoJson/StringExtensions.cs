@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-namespace BASF.ExtensionLibrary.Strings
+namespace Strings
 {
     /// <summary>
     /// Class StringExtensions.
