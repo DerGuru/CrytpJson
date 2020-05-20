@@ -28,7 +28,7 @@ There is the restriction, that the derived class MUST be self sustainable... whi
 5) Make sure your certificate will be accessible on the publish target the same way, you tested it.
 6) Lean back and be calm, because it is much harder noe, to get to those precious credentials, if you keep in mind, that the private key must be kept as a secret. So put it somewhere **safe AND secure**.
 7) Also keep in mind, that **Keeping a password as a managed string in memory is not a good idea!** So either throw away those Credentials as soon as you have finished their use or use `SecureStrings` wherever possible.
-There is a `ToSecureString()` and `ToUnsecureString()` as an extension method in the Extensionlibrary as well.
+There is a `ToSecureString()` and `ToUnsecureString()` as an extension method as well.
 
 # public Methods
 ~~~csharp
